@@ -1,1 +1,18 @@
-[]
+[
+  {
+    "property_id": "rightmove-164704706",
+    "address": "Dulwich - Elm Street",
+    "url": "https://www.rightmove.co.uk/properties/164704706#/?channel=RES_BUY",
+    "postcode": "E14 2QP",
+    "price": 400000,
+    "bedrooms": 3,
+    "tenure": "Freehold",
+    "zone": 1,
+    "viewing_date": "2025-08-04",
+    "travel_time_to_zone1": 25,
+    "nearest_tube": "Peckham",
+    "distance_to_bank_km": null,
+    "epc": "C",
+    "_created_at": "2025-08-08T21:28:07.095Z"
+  }
+]
