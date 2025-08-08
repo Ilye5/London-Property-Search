@@ -1,14 +1,1 @@
-[const subjMap = {
-  layout: grab('Layout'),
-  light: grab('Natural light'),
-  noise: grab('Noise level'),
-  outdoor: grab('Outdoor space'),
-  kitchen: grab('Kitchen quality'),
-  bathroom: grab('Bathroom quality'),
-  area_vibe: grab('Area vibe')
-};
-for (const k in subjMap) {
-  const val = subjMap[k];
-  subjMap[k] = val && !isNaN(Number(val)) ? Number(val) : null;
-}
-]
+[]
