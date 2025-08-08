@@ -1,8 +1,9 @@
 import { computeScore, compare } from './scoring.js';
 import { renderTable, buildNewRatingIssueUrl, buildWeightsIssue } from './ui.js';
 
-// >>> set this to your repo
+// Must be your public repo slug
 const REPO = "Ilye5/London-Property-Search";
+
 
 // DOM
 const rowsEl = document.getElementById("rows");
