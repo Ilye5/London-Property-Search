@@ -15,5 +15,21 @@
     "epc": "C",
     "_created_at": "2025-08-08T21:28:07.095Z",
     "_updated_at": "2025-08-08T21:28:39.644Z"
+  },
+  {
+    "property_id": "rightmove-87193257",
+    "address": "Dulwich",
+    "url": "https://www.rightmove.co.uk/properties/87193257#/?channel=RES_BUY",
+    "postcode": "2313 SE",
+    "price": 928281,
+    "bedrooms": 1,
+    "tenure": "Freehold",
+    "zone": 1,
+    "viewing_date": "_No response_",
+    "travel_time_to_zone1": null,
+    "nearest_tube": "_No response_",
+    "distance_to_bank_km": null,
+    "epc": "None",
+    "_created_at": "2025-08-08T21:40:24.879Z"
   }
 ]
