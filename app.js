@@ -110,7 +110,8 @@ saveWeightsBtn.addEventListener("click", (e) => {
 });
 
 function init() {
-  newRatingBtn.href = buildNewRatingIssueUrl(REPO, "rating.md", {});
+  // Change the new rating link to open the Issue Form
+newRatingBtn.href = `https://github.com/${REPO}/issues/new?template=rating.yml`;
   loadData().catch(err => {
     console.error(err);
     lastUpdatedEl.textContent = "Failed to load data.";
@@ -118,4 +119,83 @@ function init() {
   startPolling();
 }
 
+
+
 init();
+
+// ---- Enrichment Helper (client-only; no keys) ----
+const EH = {
+  addr: document.getElementById('eh_addr'),
+  go: document.getElementById('eh_go'),
+  copy: document.getElementById('eh_copy'),
+  out: document.getElementById('eh_out'),
+  issue: document.getElementById('eh_issue')
+};
+
+const BANK = { lat: 51.5133, lon: -0.0898 }; // Bank station approx
+EH.issue.href = `https://github.com/${REPO}/issues/new?template=rating.yml`;
+
+EH.go?.addEventListener('click', async () => {
+  const q = (EH.addr.value || '').trim();
+  if (!q) { EH.out.textContent = 'Enter an address or postcode.'; return; }
+
+  try {
+    // 1) Geocode via Nominatim (no key). Rate-limited; be gentle.
+    const url = `https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&q=${encodeURIComponent(q)}`;
+    const res = await fetch(url, { headers: { 'Accept': 'application/json' }});
+    const js = await res.json();
+    if (!js?.length) { EH.out.textContent = 'No geocoding match.'; return; }
+    const { lat, lon, display_name } = js[0];
+
+    // 2) Find a nearby Tube stop via Nominatim (query around point)
+    const tubeUrl = `https://nominatim.openstreetmap.org/search?` +
+      `format=jsonv2&limit=5&` +
+      `q=${encodeURIComponent('Underground station')}&` +
+      `viewbox=${lon-0.02},${lat+0.02},${lon+0.02},${lat-0.02}&bounded=1`;
+    const tRes = await fetch(tubeUrl);
+    const tJs = await tRes.json();
+    // Choose nearest by haversine
+    const nearest = (tJs||[]).map(s => {
+      const d = haversine(Number(lat), Number(lon), Number(s.lat), Number(s.lon));
+      return { name: s.display_name?.split(',')[0] || 'Unknown', dist_km: d };
+    }).sort((a,b)=>a.dist_km-b.dist_km)[0];
+
+    // 3) Distance to Bank (km)
+    const distBankKm = haversine(Number(lat), Number(lon), BANK.lat, BANK.lon);
+
+    const out = {
+      geocoded_address: display_name,
+      lat: Number(lat),
+      lon: Number(lon),
+      nearest_tube: nearest?.name || null,
+      nearest_tube_distance_km: nearest ? Number(nearest.dist_km.toFixed(2)) : null,
+      distance_to_bank_km: Number(distBankKm.toFixed(2))
+    };
+    EH.out.textContent =
+`Copy into the Issue Form:
+
+Nearest Tube: ${out.nearest_tube || '—'}
+Nearest Tube distance (km): ${out.nearest_tube_distance_km ?? '—'}
+Distance to Bank (km): ${out.distance_to_bank_km}`;
+
+  } catch (e) {
+    EH.out.textContent = 'Enrichment failed. Try again.';
+    console.error(e);
+  }
+});
+
+EH.copy?.addEventListener('click', async () => {
+  const text = EH.out.textContent || '';
+  if (!text) return;
+  await navigator.clipboard.writeText(text);
+  EH.out.textContent += '\n\n(Copied to clipboard)';
+});
+
+function haversine(lat1, lon1, lat2, lon2) {
+  const R = 6371; // km
+  const toRad = d => d * Math.PI / 180;
+  const dLat = toRad(lat2-lat1), dLon = toRad(lon2-lon1);
+  const a = Math.sin(dLat/2)**2 + Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLon/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
