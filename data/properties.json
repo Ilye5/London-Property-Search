@@ -31,5 +31,21 @@
     "distance_to_bank_km": null,
     "epc": "None",
     "_created_at": "2025-08-08T21:40:24.879Z"
+  },
+  {
+    "property_id": "https-www-bbc-co-uk-news-articles-c8xgg7rr1q8o",
+    "address": "313 KENT ST",
+    "url": "https://www.bbc.co.uk/news/articles/c8xgg7rr1q8o",
+    "postcode": "SE1 4YQ",
+    "price": 291234,
+    "bedrooms": 3,
+    "tenure": "Freehold",
+    "zone": 3,
+    "viewing_date": "_No response_",
+    "travel_time_to_zone1": null,
+    "nearest_tube": "_No response_",
+    "distance_to_bank_km": null,
+    "epc": "E",
+    "_created_at": "2025-08-08T22:03:16.133Z"
   }
 ]
