@@ -84,3 +84,20 @@ export function compare(a, b, key) {
   if (a[key] > b[key]) return +1 * dir(key);
   return 0;
 }
+
+// after epcScore
+const distBank = Number(p.distance_to_bank_km ?? null);
+const bankScore = Number.isFinite(distBank) ? Math.max(0, 1 - (distBank / 12)) : 0.5; // 0 at 12km+
+
+// and include weight
+w.bank = w.bank ?? 0.05;
+
+const total =
+  w.price * priceScore +
+  w.bedrooms * bedScore +
+  w.zone * zoneScore +
+  w.travel * travelScore +
+  w.epc * epcScore +
+  w.bank * bankScore +
+  w.subjective * subjectiveScore;
+
