@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>London Property Scorer</title>
+  <!-- Tailwind CDN (no build step) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 text-slate-900">
+  <header class="px-5 py-4 bg-white shadow">
+    <div class="max-w-6xl mx-auto flex items-center justify-between">
+      <h1 class="text-xl font-semibold">London Property Scorer</h1>
+      <div class="text-sm text-slate-500" id="lastUpdated">Loading…</div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto p-5 space-y-6">
+
+    <!-- Controls -->
+    <section class="bg-white p-4 rounded-lg shadow">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label class="block text-sm font-medium">Sort by</label>
+          <select id="sortBy" class="mt-1 w-full border rounded p-2">
+            <option value="score">Score (desc)</option>
+            <option value="price">Price (asc)</option>
+            <option value="bedrooms">Bedrooms (desc)</option>
+            <option value="zone">Zone (asc)</option>
+            <option value="viewing_date">Viewing date (desc)</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium">Filter: min bedrooms</label>
+          <input id="minBeds" type="number" min="0" value="2" class="mt-1 w-full border rounded p-2" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium">Filter: tenure</label>
+          <select id="tenureFilter" class="mt-1 w-full border rounded p-2">
+            <option value="any">Any</option>
+            <option value="freehold_only">Freehold</option>
+            <option value="share_or_freehold">Share of freehold or Freehold</option>
+          </select>
+        </div>
+      </div>
+      <div class="mt-4 flex items-center gap-3">
+        <button id="refreshBtn" class="px-4 py-2 bg-slate-900 text-white rounded">Refresh</button>
+        <a id="newRatingBtn" target="_blank" class="px-4 py-2 bg-emerald-600 text-white rounded">Add / Update a Rating</a>
+        <button id="editWeightsBtn" class="px-4 py-2 border rounded">Edit Weights</button>
+      </div>
+    </section>
+
+    <!-- Table -->
+    <section class="bg-white p-0 rounded-lg shadow overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="min-w-full text-sm">
+          <thead class="bg-slate-100 text-slate-700">
+            <tr>
+              <th class="px-4 py-3 text-left">Score</th>
+              <th class="px-4 py-3 text-left">Address</th>
+              <th class="px-4 py-3 text-left">Price (£)</th>
+              <th class="px-4 py-3 text-left">Beds</th>
+              <th class="px-4 py-3 text-left">Tenure</th>
+              <th class="px-4 py-3 text-left">Zone</th>
+              <th class="px-4 py-3 text-left">Travel (min)</th>
+              <th class="px-4 py-3 text-left">EPC</th>
+              <th class="px-4 py-3 text-left">Last Viewed</th>
+              <th class="px-4 py-3 text-left">Link</th>
+            </tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Weights Modal -->
+    <dialog id="weightsDialog" class="rounded-lg p-0 w-full max-w-2xl">
+      <form method="dialog">
+        <div class="p-5 border-b">
+          <h2 class="text-lg font-semibold">Edit Scoring Weights</h2>
+        </div>
+        <div class="p-5 space-y-3" id="weightsForm"></div>
+        <div class="p-4 border-t flex justify-end gap-2">
+          <button value="cancel" class="px-4 py-2 border rounded">Cancel</button>
+          <button id="saveWeightsBtn" value="default" class="px-4 py-2 bg-emerald-600 text-white rounded">Save to Issue (PR)</button>
+        </div>
+      </form>
+    </dialog>
+
+  </main>
+
+  <footer class="max-w-6xl mx-auto p-5 text-xs text-slate-500">
+    Built for your London search. Data is committed to the repo via Issues → GitHub Action → JSON.
+  </footer>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
