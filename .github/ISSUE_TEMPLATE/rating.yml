@@ -7,39 +7,39 @@ body:
     id: property_url
     attributes:
       label: Property URL
-      description: Paste the listing URL (Rightmove/Zoopla).
-      placeholder: https://www.rightmove.co.uk/property-...
+      description: "Paste the listing URL (Rightmove/Zoopla)."
+      placeholder: "https://www.rightmove.co.uk/property-..."
     validations:
       required: true
 
   - type: input
     id: address
     attributes:
-      label: Address (short)
-      placeholder: Dulwich — XYZ Street, SE22
+      label: "Address (short)"
+      placeholder: "Dulwich — XYZ Street, SE22"
     validations:
       required: true
 
   - type: input
     id: postcode
     attributes:
-      label: Postcode (or lat,lon)
-      placeholder: SE22 9XX  (or 51.4619,-0.0900)
+      label: "Postcode (or lat,lon)"
+      placeholder: "SE22 9XX  (or 51.4619,-0.0900)"
     validations:
       required: true
 
   - type: input
     id: price
     attributes:
-      label: Price (£)
-      placeholder: 385000
+      label: "Price (£)"
+      placeholder: "385000"
     validations:
       required: true
 
   - type: dropdown
     id: bedrooms
     attributes:
-      label: Bedrooms
+      label: "Bedrooms"
       options: ["1","2","3","4","5+"]
     validations:
       required: true
@@ -47,15 +47,15 @@ body:
   - type: dropdown
     id: tenure
     attributes:
-      label: Tenure
-      options: [Freehold, "Share of freehold", Leasehold, Unknown]
+      label: "Tenure"
+      options: ["Freehold","Share of freehold","Leasehold","Unknown"]
     validations:
       required: true
 
   - type: dropdown
     id: zone
     attributes:
-      label: Zone (approx)
+      label: "Zone (approx)"
       options: ["1","2","3","4","5+"]
     validations:
       required: true
@@ -63,41 +63,42 @@ body:
   - type: input
     id: viewing_date
     attributes:
-      label: Last viewed (YYYY-MM-DD)
-      placeholder: 2025-08-08
+      label: "Last viewed (YYYY-MM-DD)"
+      placeholder: "2025-08-08"
 
   - type: input
     id: travel_minutes
     attributes:
-      label: Travel to Zone 1 (minutes)
+      label: "Travel to Zone 1 (minutes)"
       placeholder: "25"
 
   - type: input
     id: nearest_tube
     attributes:
-      label: Nearest Tube stop
+      label: "Nearest Tube stop"
+      placeholder: "Denmark Hill"
 
   - type: input
     id: distance_to_bank_km
     attributes:
-      label: Distance to Bank (km, straight-line)
+      label: "Distance to Bank (km, straight-line)"
       placeholder: "7.3"
 
   - type: dropdown
     id: epc
     attributes:
-      label: EPC
-      options: [A, B, C, D, E, F, G, Unknown]
+      label: "EPC"
+      options: ["A","B","C","D","E","F","G","Unknown"]
 
   - type: textarea
     id: subjective
     attributes:
-      label: Quick subjective ratings (0–10 each)
+      label: "Quick subjective ratings (0–10 each)"
       description: "Format: layout=8, light=7, noise=4, outdoor=6, kitchen=7, bathroom=6, area_vibe=8"
       placeholder: "layout=8, light=7, noise=4, outdoor=6, kitchen=7, bathroom=6, area_vibe=8"
 
   - type: textarea
     id: notes
     attributes:
-      label: Notes
-      placeholder: South-facing living room; needs bathroom refresh.
+      label: "Notes"
+      placeholder: "South-facing living room; needs bathroom refresh."
