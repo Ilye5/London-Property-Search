@@ -1,4 +1,4 @@
-name: Update data from rating issues
+name: Update data from rating issues (Forms + JSON)
 
 on:
   issues:
@@ -19,50 +19,101 @@ jobs:
       - name: Ensure data files exist
         run: |
           mkdir -p data
-          if [ ! -f data/properties.json ]; then echo "[]" > data/properties.json; fi
-          if [ ! -f data/config.json ]; then echo '{"price":{"target":380000,"tolerance":0.10},"constraints":{"min_bedrooms":2,"allowed_tenure":["Freehold","Share of freehold"]},"bedrooms":{"cap":4},"weights":{"price":0.25,"bedrooms":0.15,"zone":0.20,"travel":0.20,"epc":0.05,"subjective":0.15}}' > data/config.json; fi
+          [ -f data/properties.json ] || echo "[]" > data/properties.json
+          [ -f data/config.json ] || cat > data/config.json <<'JSON'
+          {"price":{"target":380000,"tolerance":0.10},"constraints":{"min_bedrooms":2,"allowed_tenure":["Freehold","Share of freehold"]},"bedrooms":{"cap":4},"weights":{"price":0.25,"bedrooms":0.15,"zone":0.20,"travel":0.20,"epc":0.05,"subjective":0.15}}
+          JSON
 
-      - name: Parse issue body JSON
+      - name: Parse issue (Issue Form or JSON)
         id: parse
         uses: actions/github-script@v7
         with:
           script: |
-            const body = context.payload.issue.body || "";
-            const match = body.match(/```json\s*([\s\S]*?)\s*```/i);
-            if (!match) {
-              core.setFailed("No JSON fenced block found in issue body.");
-              return;
-            }
-            let obj;
-            try {
-              obj = JSON.parse(match[1]);
-            } catch (e) {
-              core.setFailed("Invalid JSON: " + e.message);
-              return;
+            const body = (context.payload.issue.body || "").trim();
+
+            function grab(id) {
+              // Issue Forms render as "### Label" followed by value lines until next "###"
+              const re = new RegExp(`###\\s+${id}[\\s\\S]*?\\n([\\s\\S]*?)(?=\\n###|$)`, 'i');
+              const m = body.match(re);
+              if (!m) return null;
+              return m[1].trim().replace(/^> /gm,'').replace(/^\s+|\s+$/g,'');
             }
 
-            // Detect config update
-            if (obj.type === "config_update" && obj.config) {
-              core.setOutput("mode", "config");
-              core.setOutput("json", JSON.stringify(obj.config));
-              return;
+            // Try to detect Issue Form by presence of headings:
+            const looksLikeForm = /###\s+Property URL/i.test(body);
+
+            let payload = null;
+
+            if (looksLikeForm) {
+              const url = grab('Property URL');
+              const address = grab('Address');
+              const postcode = grab('Postcode \\(or lat,lon\\)');
+              const price = grab('Price');
+              const bedrooms = grab('Bedrooms');
+              const tenure = grab('Tenure');
+              const zone = grab('Zone \\(approx\\)');
+              const viewing_date = grab('Last viewed');
+              const travel = grab('Travel to Zone 1 \\(minutes\\)');
+              const nearest_tube = grab('Nearest Tube stop');
+              const dist_bank = grab('Distance to Bank \\(km, straight-line\\)');
+              const epc = grab('EPC');
+              const subjective = grab('Quick subjective ratings');
+
+              // Build property_id
+              let property_id = null;
+              if (url) {
+                const m = url.match(/(rightmove|zoopla)[^\/]*\/.*?(\d{6,})/i);
+                property_id = m ? `${m[1].toLowerCase()}-${m[2]}` : url.replace(/[^a-z0-9]+/gi,'-').toLowerCase().slice(0,64);
+              } else if (address) {
+                property_id = address.replace(/[^a-z0-9]+/gi,'-').toLowerCase().slice(0,64);
+              }
+
+              // Bedrooms: "5+" -> 5
+              let beds = bedrooms ? (bedrooms.includes('+') ? parseInt(bedrooms,10) : parseInt(bedrooms,10)) : null;
+
+              // Parse subjective "k=v" pairs into fields
+              const subjMap = {};
+              if (subjective) {
+                subjective.split(/[,;\n]/).forEach(pair => {
+                  const [k,v] = pair.split('=').map(s => (s||'').trim());
+                  if (k && v && !isNaN(Number(v))) subjMap[k.toLowerCase()] = Number(v);
+                });
+              }
+
+              payload = {
+                property_id,
+                address,
+                url,
+                postcode,
+                price: price ? Number(String(price).replace(/[,£ ]/g,'')) : null,
+                bedrooms: Number.isFinite(beds) ? beds : null,
+                tenure: tenure || null,
+                zone: zone ? (zone.includes('+') ? Number(zone.replace('+',''))+1 : Number(zone)) : null,
+                viewing_date: viewing_date || null,
+                travel_time_to_zone1: travel ? Number(travel) : null,
+                nearest_tube: nearest_tube || null,
+                distance_to_bank_km: dist_bank ? Number(dist_bank) : null,
+                epc: (epc && epc !== 'Unknown') ? epc : null,
+                ...subjMap
+              };
+
+            } else {
+              // Fallback: original fenced JSON method
+              const match = body.match(/```json\s*([\s\S]*?)\s*```/i);
+              if (!match) core.setFailed("No Issue Form headings or JSON block detected.");
+              try {
+                payload = JSON.parse(match[1]);
+              } catch (e) {
+                core.setFailed("Invalid JSON: " + e.message);
+              }
             }
 
-            // Else, must be a rating object
-            if (!obj.property_id) {
-              core.setFailed("Rating JSON must include 'property_id'.");
-              return;
+            if (!payload || !payload.property_id) {
+              core.setFailed("Could not derive property_id. Ensure URL or Address present.");
             }
-            core.setOutput("mode", "rating");
-            core.setOutput("json", JSON.stringify(obj));
-
-      - name: Update config.json if needed
-        if: steps.parse.outputs.mode == 'config'
-        run: |
-          echo '${{ steps.parse.outputs.json }}' > data/config.json
+            core.setOutput("json", JSON.stringify(payload));
 
       - name: Merge rating into properties.json
-        if: steps.parse.outputs.mode == 'rating'
         run: |
           node -e '
           const fs = require("fs");
@@ -73,7 +124,7 @@ jobs:
           if (idx >= 0) arr[idx] = { ...arr[idx], ...incoming, _updated_at: new Date().toISOString() };
           else arr.push({ ...incoming, _created_at: new Date().toISOString() });
           fs.writeFileSync(path, JSON.stringify(arr, null, 2));
-          ' 
+          '
         env:
           INCOMING: ${{ steps.parse.outputs.json }}
 
@@ -93,7 +144,7 @@ jobs:
             await github.rest.issues.createComment({
               ...context.repo,
               issue_number: number,
-              body: "✅ Processed and committed to `data/`."
+              body: "✅ Thanks! Your rating was processed and saved to `data/properties.json`."
             });
             await github.rest.issues.update({
               ...context.repo,
