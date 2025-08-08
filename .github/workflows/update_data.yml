@@ -1,0 +1,102 @@
+name: Update data from rating issues
+
+on:
+  issues:
+    types: [opened, edited, labeled]
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  update:
+    if: contains(github.event.issue.labels.*.name, 'rating') || contains(github.event.issue.labels.*.name, 'config')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Ensure data files exist
+        run: |
+          mkdir -p data
+          if [ ! -f data/properties.json ]; then echo "[]" > data/properties.json; fi
+          if [ ! -f data/config.json ]; then echo '{"price":{"target":380000,"tolerance":0.10},"constraints":{"min_bedrooms":2,"allowed_tenure":["Freehold","Share of freehold"]},"bedrooms":{"cap":4},"weights":{"price":0.25,"bedrooms":0.15,"zone":0.20,"travel":0.20,"epc":0.05,"subjective":0.15}}' > data/config.json; fi
+
+      - name: Parse issue body JSON
+        id: parse
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const body = context.payload.issue.body || "";
+            const match = body.match(/```json\s*([\s\S]*?)\s*```/i);
+            if (!match) {
+              core.setFailed("No JSON fenced block found in issue body.");
+              return;
+            }
+            let obj;
+            try {
+              obj = JSON.parse(match[1]);
+            } catch (e) {
+              core.setFailed("Invalid JSON: " + e.message);
+              return;
+            }
+
+            // Detect config update
+            if (obj.type === "config_update" && obj.config) {
+              core.setOutput("mode", "config");
+              core.setOutput("json", JSON.stringify(obj.config));
+              return;
+            }
+
+            // Else, must be a rating object
+            if (!obj.property_id) {
+              core.setFailed("Rating JSON must include 'property_id'.");
+              return;
+            }
+            core.setOutput("mode", "rating");
+            core.setOutput("json", JSON.stringify(obj));
+
+      - name: Update config.json if needed
+        if: steps.parse.outputs.mode == 'config'
+        run: |
+          echo '${{ steps.parse.outputs.json }}' > data/config.json
+
+      - name: Merge rating into properties.json
+        if: steps.parse.outputs.mode == 'rating'
+        run: |
+          node -e '
+          const fs = require("fs");
+          const path = "data/properties.json";
+          const incoming = JSON.parse(process.env.INCOMING);
+          const arr = JSON.parse(fs.readFileSync(path, "utf8"));
+          const idx = arr.findIndex(x => x.property_id === incoming.property_id);
+          if (idx >= 0) arr[idx] = { ...arr[idx], ...incoming, _updated_at: new Date().toISOString() };
+          else arr.push({ ...incoming, _created_at: new Date().toISOString() });
+          fs.writeFileSync(path, JSON.stringify(arr, null, 2));
+          ' 
+        env:
+          INCOMING: ${{ steps.parse.outputs.json }}
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/*.json
+          git commit -m "Update data via Issue #${{ github.event.issue.number }}" || echo "No changes"
+          git push
+
+      - name: Comment & close
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const number = context.issue.number;
+            await github.rest.issues.createComment({
+              ...context.repo,
+              issue_number: number,
+              body: "✅ Processed and committed to `data/`."
+            });
+            await github.rest.issues.update({
+              ...context.repo,
+              issue_number: number,
+              state: "closed"
+            });
