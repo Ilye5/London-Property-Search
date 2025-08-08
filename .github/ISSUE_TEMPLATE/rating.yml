@@ -90,12 +90,52 @@ body:
       label: "EPC"
       options: ["A","B","C","D","E","F","G","Unknown"]
 
-  - type: textarea
-    id: subjective
+  # Subjective ratings as dropdowns 0-10
+  - type: markdown
     attributes:
-      label: "Quick subjective ratings (0–10 each)"
-      description: "Format: layout=8, light=7, noise=4, outdoor=6, kitchen=7, bathroom=6, area_vibe=8"
-      placeholder: "layout=8, light=7, noise=4, outdoor=6, kitchen=7, bathroom=6, area_vibe=8"
+      value: "### Subjective Ratings (0 = terrible, 10 = excellent)"
+
+  - type: dropdown
+    id: layout
+    attributes:
+      label: "Layout"
+      options: ["0","1","2","3","4","5","6","7","8","9","10"]
+
+  - type: dropdown
+    id: light
+    attributes:
+      label: "Natural light"
+      options: ["0","1","2","3","4","5","6","7","8","9","10"]
+
+  - type: dropdown
+    id: noise
+    attributes:
+      label: "Noise level (reverse score: 10 = very quiet)"
+      options: ["0","1","2","3","4","5","6","7","8","9","10"]
+
+  - type: dropdown
+    id: outdoor
+    attributes:
+      label: "Outdoor space"
+      options: ["0","1","2","3","4","5","6","7","8","9","10"]
+
+  - type: dropdown
+    id: kitchen
+    attributes:
+      label: "Kitchen quality"
+      options: ["0","1","2","3","4","5","6","7","8","9","10"]
+
+  - type: dropdown
+    id: bathroom
+    attributes:
+      label: "Bathroom quality"
+      options: ["0","1","2","3","4","5","6","7","8","9","10"]
+
+  - type: dropdown
+    id: area_vibe
+    attributes:
+      label: "Area vibe"
+      options: ["0","1","2","3","4","5","6","7","8","9","10"]
 
   - type: textarea
     id: notes
