@@ -3,7 +3,7 @@ import { computeScore, compare } from './scoring.js';
 import { renderTable, buildNewRatingIssueUrl, buildWeightsIssue } from './ui.js';
 
 // >>>> SET THIS TO "your-github-username/your-repo"
-const REPO = "your-username/your-repo";
+const REPO = "Ilye5/London-Property-Search";
 
 const rowsEl = document.getElementById("rows");
 const lastUpdatedEl = document.getElementById("lastUpdated");
