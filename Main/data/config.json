@@ -1,0 +1,16 @@
+{
+  "price": { "target": 380000, "tolerance": 0.10 },
+  "constraints": {
+    "min_bedrooms": 2,
+    "allowed_tenure": ["Freehold", "Share of freehold"]
+  },
+  "bedrooms": { "cap": 4 },
+  "weights": {
+    "price": 0.25,
+    "bedrooms": 0.15,
+    "zone": 0.20,
+    "travel": 0.20,
+    "epc": 0.05,
+    "subjective": 0.15
+  }
+}
