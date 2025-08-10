@@ -239,5 +239,21 @@
     "distance_to_bank_km": null,
     "epc": "None",
     "_created_at": "2025-08-10T22:48:28.891Z"
+  },
+  {
+    "property_id": "zoopla-70761261",
+    "address": "Maida Vale",
+    "url": "https://www.zoopla.co.uk/for-sale/details/70761261/?search_identifier=765b59be91cec5650b39c4f34ce3447bdc814a62686acb47bf5346ff73b41f34",
+    "postcode": "London W9",
+    "price": 400000,
+    "bedrooms": 2,
+    "tenure": "Share of freehold",
+    "zone": 1,
+    "viewing_date": "_No response_",
+    "travel_time_to_zone1": null,
+    "nearest_tube": "_No response_",
+    "distance_to_bank_km": null,
+    "epc": "None",
+    "_created_at": "2025-08-10T22:52:01.786Z"
   }
 ]
