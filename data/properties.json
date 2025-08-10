@@ -111,5 +111,21 @@
     "distance_to_bank_km": null,
     "epc": "None",
     "_created_at": "2025-08-10T21:20:46.930Z"
+  },
+  {
+    "property_id": "rightmove-156954653",
+    "address": "Manor Park Road",
+    "url": "https://www.rightmove.co.uk/properties/156954653#/?channel=RES_BUY",
+    "postcode": "NW10 4NG",
+    "price": 375000,
+    "bedrooms": 2,
+    "tenure": "Freehold",
+    "zone": 1,
+    "viewing_date": "_No response_",
+    "travel_time_to_zone1": null,
+    "nearest_tube": "_No response_",
+    "distance_to_bank_km": null,
+    "epc": "None",
+    "_created_at": "2025-08-10T21:21:53.892Z"
   }
 ]
