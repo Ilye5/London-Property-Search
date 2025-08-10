@@ -95,5 +95,21 @@
     "distance_to_bank_km": null,
     "epc": "None",
     "_created_at": "2025-08-10T21:19:42.397Z"
+  },
+  {
+    "property_id": "rightmove-158947871",
+    "address": "Galsworthy Road,",
+    "url": "https://www.rightmove.co.uk/properties/158947871#/?channel=RES_BUY",
+    "postcode": "kt2 7qb",
+    "price": 370000,
+    "bedrooms": 2,
+    "tenure": "Share of freehold",
+    "zone": 1,
+    "viewing_date": "_No response_",
+    "travel_time_to_zone1": null,
+    "nearest_tube": "_No response_",
+    "distance_to_bank_km": null,
+    "epc": "None",
+    "_created_at": "2025-08-10T21:20:46.930Z"
   }
 ]
