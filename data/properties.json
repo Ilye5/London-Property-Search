@@ -127,5 +127,21 @@
     "distance_to_bank_km": null,
     "epc": "None",
     "_created_at": "2025-08-10T21:21:53.892Z"
+  },
+  {
+    "property_id": "rightmove-164420321",
+    "address": "Chiswick",
+    "url": "https://www.rightmove.co.uk/properties/164420321#/?channel=RES_BUY",
+    "postcode": "W4",
+    "price": 375000,
+    "bedrooms": 2,
+    "tenure": "Share of freehold",
+    "zone": 1,
+    "viewing_date": "_No response_",
+    "travel_time_to_zone1": null,
+    "nearest_tube": "_No response_",
+    "distance_to_bank_km": null,
+    "epc": "None",
+    "_created_at": "2025-08-10T21:22:29.051Z"
   }
 ]
