@@ -143,5 +143,21 @@
     "distance_to_bank_km": null,
     "epc": "None",
     "_created_at": "2025-08-10T21:22:29.051Z"
+  },
+  {
+    "property_id": "rightmove-164171132",
+    "address": "Honor Oak Stanstead Road",
+    "url": "https://www.rightmove.co.uk/properties/164171132#/?channel=RES_BUY",
+    "postcode": "SE23 1DB",
+    "price": 375000,
+    "bedrooms": 2,
+    "tenure": "Freehold",
+    "zone": 1,
+    "viewing_date": "_No response_",
+    "travel_time_to_zone1": null,
+    "nearest_tube": "_No response_",
+    "distance_to_bank_km": null,
+    "epc": "None",
+    "_created_at": "2025-08-10T21:24:07.752Z"
   }
 ]
