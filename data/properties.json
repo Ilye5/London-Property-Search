@@ -175,5 +175,21 @@
     "distance_to_bank_km": null,
     "epc": "None",
     "_created_at": "2025-08-10T21:25:13.857Z"
+  },
+  {
+    "property_id": "zoopla-67300745",
+    "address": "Rotherhithe Street",
+    "url": "https://www.zoopla.co.uk/for-sale/details/67300745/?search_identifier=765b59be91cec5650b39c4f34ce3447bdc814a62686acb47bf5346ff73b41f34&featured=1&utm_content=featured_listing",
+    "postcode": "SE16",
+    "price": null,
+    "bedrooms": 2,
+    "tenure": "Share of freehold",
+    "zone": 1,
+    "viewing_date": "_No response_",
+    "travel_time_to_zone1": null,
+    "nearest_tube": "_No response_",
+    "distance_to_bank_km": null,
+    "epc": "None",
+    "_created_at": "2025-08-10T22:44:14.429Z"
   }
 ]
