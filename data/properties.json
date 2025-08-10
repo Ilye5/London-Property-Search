@@ -79,5 +79,21 @@
     "distance_to_bank_km": null,
     "epc": "None",
     "_created_at": "2025-08-10T21:19:04.091Z"
+  },
+  {
+    "property_id": "rightmove-148617104",
+    "address": "Golders Green Road, London,",
+    "url": "https://www.rightmove.co.uk/properties/148617104#/?channel=RES_BUY",
+    "postcode": "NW11",
+    "price": 375000,
+    "bedrooms": 2,
+    "tenure": "Leasehold",
+    "zone": 1,
+    "viewing_date": "_No response_",
+    "travel_time_to_zone1": null,
+    "nearest_tube": "_No response_",
+    "distance_to_bank_km": null,
+    "epc": "None",
+    "_created_at": "2025-08-10T21:19:42.397Z"
   }
 ]
